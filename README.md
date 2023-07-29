@@ -37,6 +37,6 @@ go test
 
 # CI CD
 
-This repo have workflow to run linting, validate and deploy terraform code in AWS with every push in main branch.
+This repo have workflow enabled to run linting, validate, scan and deploy terraform code in AWS with every push to main branch.
 
 To deploy code in AWS, we need to save terraform user secret and key and Github "secrets and variables" tab.
