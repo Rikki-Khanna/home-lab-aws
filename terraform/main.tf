@@ -1,3 +1,39 @@
+module "vpc" {
+  source     = "./modules/vpc"
+  cidr_block = "10.0.0.0/24"
+  vpc_tags   = { Name = "homelab_vpc" }
+}
+
+module "subnet_a" {
+  source            = "./modules/subnet"
+  vpc_id            = module.vpc.vpc_id
+  subnet_cidr_block        = "10.1.0.0/16"
+  availability_zone = "ap-south-1a"
+  subnet_tags       = { Name = "homelab_subnet_a" }
+}
+
+module "subnet_b" {
+  source            = "./modules/subnet"
+  vpc_id            = module.vpc.vpc_id
+  subnet_cidr_block        = "10.1.0.0/16"
+  availability_zone = "ap-south-1a"
+  subnet_tags       = { Name = "homelab_subnet_b" }
+}
+
+module "ebs_a" {
+  source            = "./modules/ebs"
+  availability_zone = "ap-south-1b"
+  ebs_size          = 10
+  ebs_tags          = { Name = "homelab_ebs_a" }
+}
+
+module "ebs_b" {
+  source            = "./modules/ebs"
+  availability_zone = "ap-south-1b"
+  ebs_size          = 10
+  ebs_tags          = { Name = "homelab_ebs_b" }
+}
+
 module "ec2_instance_a" {
   source = "./modules/ec2_instance"
 
@@ -5,23 +41,12 @@ module "ec2_instance_a" {
 
   instance_type = "t2.micro"
 
-  availability_zone = "ap-south-1a"
+  key_name = "homelab_key"
 
-  key_name = "homelab_key_a"
+  subnet_id = module.subnet_a.subnet_id
 
-  cidr_block = "10.0.0.0/24"
+  ec2_tags = { Name = "homelab_ec2_instance_a" }
 
-  subnet_cidr_block = "10.1.0.0/16"
-
-  device_name = "homelab_a"
-
-  ebs_size = 10
-
-  tags = { Name = "homelab_ec2_instance_a" }
-
-  ebs_tags = { Name = "homelab_ebs_a" }
-
-  subnet_tags = { Name = "homelab_subnet_a" }
 }
 
 module "ec2_instance_b" {
@@ -31,32 +56,33 @@ module "ec2_instance_b" {
 
   instance_type = "t2.micro"
 
-  availability_zone = "ap-south-1b"
+  key_name = "homelab_key"
 
-  key_name = "homelab_key_b"
+  subnet_id = module.subnet_b.subnet_id
 
-  cidr_block = "10.0.0.0/24"
+  ec2_tags = { Name = "homelab_ec2_instance_b" }
 
-  subnet_cidr_block = "10.2.0.0/16"
+}
+
+
+module "ebs_volume_a" {
+  source = "./modules/ebs_volume"
+
+  device_name = "homelab_a"
+
+  instance_id = module.ec2_instance_a.instance_id
+
+  volume_id = module.ebs_a.volume_id
+
+}
+
+module "ebs_volume_b" {
+  source = "./modules/ebs_volume/"
 
   device_name = "homelab_b"
 
-  ebs_size = 10
+  instance_id = module.ec2_instance_b.instance_id
 
-  tags = { Name = "homelab_ec2_instance_b" }
-
-  ebs_tags = { Name = "homelab_ebs_b" }
-
-  subnet_tags = { Name = "homelab_subnet_b" }
-}
-
-module "s3_bucket" {
-  source = "./modules/s3_bucket"
-
-  bucket_name = "home-lab-testbucket"
-
-  use_prefix = false
-
-  acl = "private"
+  volume_id = module.ebs_b.volume_id
 
 }

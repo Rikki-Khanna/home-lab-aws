@@ -1,23 +1,17 @@
-variable "cidr_block" {
+variable "vpc_id" {
   type        = string
-  description = "CIDR range of VPC"
+  description = "VPC id in which subnet needs to be created."
 }
 
 variable "subnet_cidr_block" {
   type        = string
-  description = "CIDR range of Subnet"
+  description = "CIDR range of Subnet under VPC CIDR range."
 }
 
 variable "availability_zone" {
   type        = string
   description = "A EC2 availability zones in which resource will be created."
   default     = "ap-south-1a"
-}
-
-variable "vpc_tags" {
-  type        = map(string)
-  default     = {}
-  description = "Tags for vpc created by this module (key = tag name, value = tag value)"
 }
 
 variable "subnet_tags" {

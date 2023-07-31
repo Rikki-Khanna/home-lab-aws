@@ -1,4 +1,4 @@
-module "default" {
+module "ebs_test" {
   source            = "../../"
   availability_zone = "ap-south-1b"
   ebs_size          = 10

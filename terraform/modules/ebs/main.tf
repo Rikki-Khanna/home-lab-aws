@@ -1,4 +1,4 @@
-resource "aws_ebs_volume" "ebs" {
+resource "aws_ebs_volume" "main" {
 
   availability_zone = var.availability_zone
 

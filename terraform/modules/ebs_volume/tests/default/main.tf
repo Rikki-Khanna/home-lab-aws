@@ -1,3 +1,10 @@
+module "ebs_test" {
+  source            = "../../../ebs"
+  availability_zone = "ap-south-1b"
+  ebs_size          = 10
+  ebs_tags          = { Name = "homelab" }
+}
+
 module "vpc_test" {
   source     = "../../../vpc"
   cidr_block = "10.0.0.0/24"
@@ -14,7 +21,7 @@ module "subnet_test" {
 
 
 module "ec2_instance_test" {
-  source = "../../"
+  source = "../../../ec2_instance"
 
   ami = "ami-0c55b159cbfafe1f0"
 
@@ -25,5 +32,16 @@ module "ec2_instance_test" {
   subnet_id = module.subnet_test.subnet_id
 
   ec2_tags = { Name = "homelab_ec2_instance" }
+
+}
+
+module "ebs_volume_test" {
+  source = "../../"
+
+  device_name = "homelab_a_test"
+
+  instance_id = module.ec2_instance_test.instance_id
+
+  volume_id = module.ebs_test.volume_id
 
 }
