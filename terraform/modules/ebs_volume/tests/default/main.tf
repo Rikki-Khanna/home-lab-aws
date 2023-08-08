@@ -14,7 +14,7 @@ module "vpc_test" {
 module "subnet_test" {
   source            = "../../../subnet"
   vpc_id            = module.vpc_test.vpc_id
-  subnet_cidr_block        = "10.1.0.0/16"
+  subnet_cidr_block = "10.1.0.0/16"
   availability_zone = "ap-south-1a"
   subnet_tags       = { Name = "homelab_subnet_test" }
 }
