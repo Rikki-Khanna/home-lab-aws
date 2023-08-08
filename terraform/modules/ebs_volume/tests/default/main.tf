@@ -38,7 +38,7 @@ module "ec2_instance_test" {
 module "ebs_volume_test" {
   source = "../../"
 
-  device_name = "homelab_a_test"
+  device_name = "/dev/sdh"
 
   instance_id = module.ec2_instance_test.instance_id
 
